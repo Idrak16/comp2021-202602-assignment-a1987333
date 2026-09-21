@@ -22,15 +22,43 @@ public sealed class RecipeManager : IRecipeManager
 
     public RecipeManager(IEnumerable<Recipe> recipes)
     {
-        // TODO Part A: validate recipes and build Dictionary<int, Recipe>.
-        _ = recipes;
+        if (recipes is null)
+        {
+            throw new ArgumentNullException(nameof(recipes));
+        }
+
+        foreach (Recipe? recipe in recipes)
+        {
+            if (recipe is null)
+            {
+                throw new ArgumentException("Recipe collection contains a null entry.", nameof(recipes));
+            }
+
+            if (recipe.Id <= 0)
+            {
+                throw new ArgumentException($"Recipe ID must be positive (got {recipe.Id}).", nameof(recipes));
+            }
+
+            if (string.IsNullOrWhiteSpace(recipe.Title))
+            {
+                throw new ArgumentException($"Recipe {recipe.Id} has a blank title.", nameof(recipes));
+            }
+
+            if (!_recipes.TryAdd(recipe.Id, recipe))
+            {
+                throw new ArgumentException($"Duplicate recipe ID: {recipe.Id}.", nameof(recipes));
+            }
+        }
     }
 
-    public int RecipeCount => 0;
-    public int ShoppingItemCount => 0;
-    public int CookingPlanCount => 0;
-    public int PendingInstructionCount => 0;
-    public int RemovedRecipeCount => 0;
+
+    
+
+    public int RecipeCount => _recipes.Count;
+    public int ShoppingItemCount => _shoppingList.Count;
+    public int CookingPlanCount => _cookingPlan.Count;
+    public int PendingInstructionCount => _instructionQueue.Count;
+    public int RemovedRecipeCount => _removedRecipes.Count;
 
     public bool AddRecipe(Recipe recipe) =>
         throw new NotImplementedException("Part A: implement AddRecipe.");
