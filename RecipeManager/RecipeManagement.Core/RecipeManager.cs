@@ -4,9 +4,13 @@ using System.Collections.Generic;
 namespace RecipeManagement.Core;
 
 /// <summary>
-/// Implement this class using the five Part A collections as private fields:
-/// Dictionary&lt;int, Recipe&gt;, List&lt;string&gt;, LinkedList&lt;int&gt;,
-/// Stack&lt;int&gt; and Queue&lt;string&gt;.
+/// Part A implementation of the recipe-management system.
+/// Uses the five nominated collections for their assigned roles:
+///   Dictionary<int, Recipe> - recipe catalogue (primary lookup by ID)
+///   List<string>            - shopping list of ingredient strings
+///   LinkedList<int>         - cooking plan (recipe IDs in cook order)
+///   Stack<int>              - history of recently removed plan recipes
+///   Queue<string>           - active recipe's cooking instructions
 /// </summary>
 public sealed class RecipeManager : IRecipeManager
 {
