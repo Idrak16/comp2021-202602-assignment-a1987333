@@ -60,8 +60,21 @@ public sealed class RecipeManager : IRecipeManager
     public int PendingInstructionCount => _instructionQueue.Count;
     public int RemovedRecipeCount => _removedRecipes.Count;
 
-    public bool AddRecipe(Recipe recipe) =>
-        throw new NotImplementedException("Part A: implement AddRecipe.");
+    public bool AddRecipe(Recipe recipe) 
+        {
+        if (recipe is null)
+        {
+            throw new ArgumentNullException(nameof(recipe));
+        }
+
+        if (recipe.Id <= 0 || string.IsNullOrWhiteSpace(recipe.Title))
+        {
+            return false;
+        }
+        // TryAdd returns false when the key already exists, so duplicates are rejected.
+        return _recipes.TryAdd(recipe.Id, recipe);
+    }
+
 
     public Recipe? FindRecipe(int recipeId) =>
         throw new NotImplementedException("Part A: implement FindRecipe.");
