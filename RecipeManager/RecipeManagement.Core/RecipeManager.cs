@@ -89,8 +89,19 @@ public sealed class RecipeManager : IRecipeManager
         return _recipes.Remove(recipeId);
     }
 
-    public int AddIngredientsToShoppingList(int recipeId) =>
-        throw new NotImplementedException("Part A: implement AddIngredientsToShoppingList.");
+    public int AddIngredientsToShoppingList(int recipeId)
+    {
+        if (!_recipes.TryGetValue(recipeId, out Recipe? recipe))
+        {
+            return 0;
+        }
+        foreach (string j in recipe.Ingredients)
+        {
+            _shoppingList.Add(j);
+        }
+        return recipe.Ingredients.Count;
+ 
+    }
 
     public IReadOnlyList<string> GetShoppingList() =>
         throw new NotImplementedException("Part A: implement GetShoppingList.");
