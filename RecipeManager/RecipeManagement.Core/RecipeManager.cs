@@ -103,14 +103,22 @@ public sealed class RecipeManager : IRecipeManager
  
     }
 
-    public IReadOnlyList<string> GetShoppingList() =>
-        throw new NotImplementedException("Part A: implement GetShoppingList.");
+    // Return a copy so callers cannot mutate the internal list.
+    public IReadOnlyList<string> GetShoppingList() => _shoppingList.ToList();
 
-    public void ClearShoppingList() =>
-        throw new NotImplementedException("Part A: implement ClearShoppingList.");
+    public void ClearShoppingList() => _shoppingList.Clear();
 
-    public bool AddRecipeToCookingPlan(int recipeId) =>
-        throw new NotImplementedException("Part A: implement AddRecipeToCookingPlan.");
+
+    public bool AddRecipeToCookingPlan(int recipeId)
+    {
+        //Only a nown recipe must appear, that too only once
+        if (!_recipes.ContainsKey(recipeId) || _cookingPlan.Contains(recipeId))
+        {
+            return false;
+        }
+        _cookingPlan.AddLast(recipeId)
+        return true;
+    }
 
     public bool RemoveRecipeFromCookingPlan(int recipeId) =>
         throw new NotImplementedException("Part A: implement RemoveRecipeFromCookingPlan.");
