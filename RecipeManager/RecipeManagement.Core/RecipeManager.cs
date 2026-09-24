@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace RecipeManagement.Core;
 
@@ -116,12 +117,24 @@ public sealed class RecipeManager : IRecipeManager
         {
             return false;
         }
-        _cookingPlan.AddLast(recipeId)
+        _cookingPlan.AddLast(recipeId);
         return true;
     }
 
-    public bool RemoveRecipeFromCookingPlan(int recipeId) =>
-        throw new NotImplementedException("Part A: implement RemoveRecipeFromCookingPlan.");
+    public bool RemoveRecipeFromCookingPlan(int recipeId)
+    {
+        if (!_recipes.TryGetValue(recipeId, out Recipe? recipe) || recipe.Instructions.Count==0)
+        {
+            return false;
+        }
+        _instructionQueue.Clear();
+        foreach (string i in recipe.Instructions)
+        {
+            _instructionQueue.Enqueue(i);
+        }
+        return true;
+        
+    }
 
     public bool RestoreLastRemovedRecipe() =>
         throw new NotImplementedException("Part A: implement RestoreLastRemovedRecipe.");
