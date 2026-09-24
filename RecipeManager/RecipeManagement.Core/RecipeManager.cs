@@ -75,12 +75,19 @@ public sealed class RecipeManager : IRecipeManager
         return _recipes.TryAdd(recipe.Id, recipe);
     }
 
-
     public Recipe? FindRecipe(int recipeId) =>
-        throw new NotImplementedException("Part A: implement FindRecipe.");
+        _recipes.TryGetValue(recipeId, out Recipe? recipe) ? recipe : null;
 
-    public bool RemoveRecipe(int recipeId) =>
-        throw new NotImplementedException("Part A: implement RemoveRecipe.");
+    public bool RemoveRecipe(int recipeId)
+    {
+        // Cannot remove a recipe that is missing or still planned for cooking.
+        if (!_recipes.ContainsKey(recipeId) || _cookingPlan.Contains(recipeId))
+        {
+            return false;
+        }
+
+        return _recipes.Remove(recipeId);
+    }
 
     public int AddIngredientsToShoppingList(int recipeId) =>
         throw new NotImplementedException("Part A: implement AddIngredientsToShoppingList.");
