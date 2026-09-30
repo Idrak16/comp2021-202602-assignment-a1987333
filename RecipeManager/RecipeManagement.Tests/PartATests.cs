@@ -330,6 +330,20 @@ public sealed class PartATests
         Assert.Equal("Cook", _manager.CompleteNextInstruction());
         Assert.Null(_manager.CompleteNextInstruction());
     }
+    [Fact]
+    public void Interaction_RemoveFromCatalogueAfterPlanRemoval_RestoreFails()
+    {
+        // Plan a recipe, take it back off the plan (goes to the stack),
+        // then delete it from the catalogue. Restoring the now-deleted recipe
+        // must fail because the dictionary no longer knows it.
+        _manager.AddRecipeToCookingPlan(1);
+        _manager.RemoveRecipeFromCookingPlan(1);
+
+        Assert.True(_manager.RemoveRecipe(1));      // allowed: not in the plan anymore
+        Assert.False(_manager.RestoreLastRemovedRecipe());
+        Assert.Empty(_manager.GetCookingPlan());
+    }
+    
 
     
 
