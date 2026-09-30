@@ -343,9 +343,14 @@ public sealed class PartATests
         Assert.False(_manager.RestoreLastRemovedRecipe());
         Assert.Empty(_manager.GetCookingPlan());
     }
-    
 
-    
-
+    [Fact]
+    public void Interaction_ClearAndRebuildShoppingList()
+    {
+        _manager.AddIngredientsToShoppingList(1);
+        _manager.ClearShoppingList();
+        _manager.AddIngredientsToShoppingList(2);
+        Assert.Equal(new[] { "bread" }, _manager.GetShoppingList());
+    }
 
 }
