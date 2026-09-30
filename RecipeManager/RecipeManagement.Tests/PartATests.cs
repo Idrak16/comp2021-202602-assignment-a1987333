@@ -239,4 +239,47 @@ public sealed class PartATests
         Assert.False(_manager.RestoreLastRemovedRecipe());
     }
 
+     // ---------- Cooking instructions (Queue) ----------
+
+    [Fact]
+    public void StartCooking_LoadsInstructionsFifo()
+    {
+        Assert.True(_manager.StartCooking(1));
+        Assert.Equal(3, _manager.PendingInstructionCount);
+        Assert.Equal("Mix", _manager.PeekNextInstruction());
+        Assert.Equal("Mix", _manager.CompleteNextInstruction());
+        Assert.Equal("Fry", _manager.CompleteNextInstruction());
+        Assert.Equal("Serve", _manager.CompleteNextInstruction());
+    }
+
+    [Fact]
+    public void StartCooking_ReplacesPreviousQueue()
+    {
+        _manager.StartCooking(1);
+        _manager.CompleteNextInstruction();
+        Assert.True(_manager.StartCooking(2));
+        Assert.Equal(1, _manager.PendingInstructionCount);
+        Assert.Equal("Toast bread", _manager.PeekNextInstruction());
+    }
+
+    [Fact]
+    public void StartCooking_NoInstructions_ReturnsFalse()
+    {
+        Assert.False(_manager.StartCooking(3));
+    }
+
+    [Fact]
+    public void StartCooking_MissingRecipe_ReturnsFalse()
+    {
+        Assert.False(_manager.StartCooking(999));
+    }
+
+    [Fact]
+    public void EmptyQueue_PeekAndComplete_ReturnNull()
+    {
+        Assert.Null(_manager.PeekNextInstruction());
+        Assert.Null(_manager.CompleteNextInstruction());
+    }
+
+
 }
