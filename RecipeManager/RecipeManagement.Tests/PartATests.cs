@@ -92,6 +92,53 @@ public sealed class PartATests
         Assert.Equal(4, _manager.RecipeCount);
         Assert.Equal("New", _manager.FindRecipe(99)?.Title);
     }
+    [Fact]
+    public void AddRecipe_DuplicateId_ReturnsFalse()
+    {
+        Assert.False(_manager.AddRecipe(new Recipe { Id = 1, Title = "Dup" }));
+        Assert.Equal(3, _manager.RecipeCount);
+    }
+
+    [Fact]
+    public void AddRecipe_InvalidIdOrTitle_ReturnsFalse()
+    {
+        Assert.False(_manager.AddRecipe(new Recipe { Id = -5, Title = "Bad" }));
+        Assert.False(_manager.AddRecipe(new Recipe { Id = 50, Title = "" }));
+    }
+
+    [Fact]
+    public void AddRecipe_Null_Throws()
+    {
+        Assert.Throws<ArgumentNullException>(() => _manager.AddRecipe(null!));
+    }
+
+    [Fact]
+    public void FindRecipe_MissingId_ReturnsNull()
+    {
+        Assert.Null(_manager.FindRecipe(1234));
+    }
+
+    [Fact]
+    public void RemoveRecipe_Existing_ReturnsTrue()
+    {
+        Assert.True(_manager.RemoveRecipe(2));
+        Assert.Null(_manager.FindRecipe(2));
+        Assert.Equal(2, _manager.RecipeCount);
+    }
+
+    [Fact]
+    public void RemoveRecipe_Missing_ReturnsFalse()
+    {
+        Assert.False(_manager.RemoveRecipe(999));
+    }
+
+    [Fact]
+    public void RemoveRecipe_WhileInCookingPlan_ReturnsFalse()
+    {
+        _manager.AddRecipeToCookingPlan(1);
+        Assert.False(_manager.RemoveRecipe(1));
+        Assert.NotNull(_manager.FindRecipe(1));
+    }
 
 
 }
