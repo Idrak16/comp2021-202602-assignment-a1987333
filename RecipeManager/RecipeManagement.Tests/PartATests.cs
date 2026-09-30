@@ -281,5 +281,24 @@ public sealed class PartATests
         Assert.Null(_manager.CompleteNextInstruction());
     }
 
+      // ---------- Interactions between components ----------
+
+    [Fact]
+    public void Interaction_PlanRemoveRestoreThenCook()
+    {
+        _manager.AddRecipeToCookingPlan(1);
+        _manager.AddRecipeToCookingPlan(2);
+
+        Assert.True(_manager.RemoveRecipeFromCookingPlan(1));
+        Assert.Equal(new[] { 2 }, _manager.GetCookingPlan());
+
+        Assert.True(_manager.RestoreLastRemovedRecipe());
+        Assert.Equal(new[] { 2, 1 }, _manager.GetCookingPlan());
+
+        Assert.True(_manager.StartCooking(1));
+        Assert.Equal("Mix", _manager.CompleteNextInstruction());
+        Assert.Equal(2, _manager.PendingInstructionCount);
+    }
+
 
 }
