@@ -300,5 +300,38 @@ public sealed class PartATests
         Assert.Equal(2, _manager.PendingInstructionCount);
     }
 
+      [Fact]
+    public void Interaction_ShoppingListBuiltFromCatalogue()
+    {
+        _manager.AddIngredientsToShoppingList(1);
+        _manager.AddIngredientsToShoppingList(2);
+        Assert.Equal(4, _manager.ShoppingItemCount);
+        Assert.Equal(new[] { "flour", "milk", "egg", "bread" }, _manager.GetShoppingList());
+    }
+
+    [Fact]
+    public void Interaction_FullLifecycle_AddPlanCookComplete()
+    {
+        // A brand-new recipe should flow through every collection cleanly.
+        Assert.True(_manager.AddRecipe(new Recipe
+        {
+            Id = 42,
+            Title = "Omelette",
+            Ingredients = new() { "egg", "butter" },
+            Instructions = new() { "Beat eggs", "Cook" }
+        }));
+
+        Assert.Equal(2, _manager.AddIngredientsToShoppingList(42));
+        Assert.True(_manager.AddRecipeToCookingPlan(42));
+        Assert.Equal(new[] { 42 }, _manager.GetCookingPlan());
+
+        Assert.True(_manager.StartCooking(42));
+        Assert.Equal("Beat eggs", _manager.CompleteNextInstruction());
+        Assert.Equal("Cook", _manager.CompleteNextInstruction());
+        Assert.Null(_manager.CompleteNextInstruction());
+    }
+
+    
+
 
 }
