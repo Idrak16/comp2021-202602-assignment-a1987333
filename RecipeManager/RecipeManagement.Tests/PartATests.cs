@@ -45,4 +45,53 @@ public sealed class PartATests
             // no instructions on purpose
         }
     };
+    // ---------- Constructor / Dictionary ----------
+
+    [Fact]
+    public void Constructor_NullRecipes_Throws()
+    {
+        Assert.Throws<ArgumentNullException>(() => new RecipeManager(null!));
+    }
+
+    [Fact]
+    public void Constructor_DuplicateId_Throws()
+    {
+        var recipes = new[]
+        {
+            new Recipe { Id = 1, Title = "A" },
+            new Recipe { Id = 1, Title = "B" }
+        };
+        Assert.Throws<ArgumentException>(() => new RecipeManager(recipes));
+    }
+
+    [Fact]
+    public void Constructor_NonPositiveId_Throws()
+    {
+        var recipes = new[] { new Recipe { Id = 0, Title = "A" } };
+        Assert.Throws<ArgumentException>(() => new RecipeManager(recipes));
+    }
+
+    [Fact]
+    public void Constructor_BlankTitle_Throws()
+    {
+        var recipes = new[] { new Recipe { Id = 1, Title = "   " } };
+        Assert.Throws<ArgumentException>(() => new RecipeManager(recipes));
+    }
+
+    [Fact]
+    public void Constructor_BuildsCatalogueFromInput()
+    {
+        Assert.Equal(3, _manager.RecipeCount);
+        Assert.Equal("Pancakes", _manager.FindRecipe(1)?.Title);
+    }
+
+    [Fact]
+    public void AddRecipe_NewId_ReturnsTrueAndStores()
+    {
+        Assert.True(_manager.AddRecipe(new Recipe { Id = 99, Title = "New" }));
+        Assert.Equal(4, _manager.RecipeCount);
+        Assert.Equal("New", _manager.FindRecipe(99)?.Title);
+    }
+
+
 }
