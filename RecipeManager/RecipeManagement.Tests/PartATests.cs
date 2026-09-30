@@ -140,5 +140,43 @@ public sealed class PartATests
         Assert.NotNull(_manager.FindRecipe(1));
     }
 
+    // ---------- Shopping list (List) ----------
+
+    [Fact]
+    public void AddIngredients_CopiesInOrder_AndReturnsCount()
+    {
+        int added = _manager.AddIngredientsToShoppingList(1);
+        Assert.Equal(3, added);
+        Assert.Equal(new[] { "flour", "milk", "egg" }, _manager.GetShoppingList());
+    }
+
+    [Fact]
+    public void AddIngredients_MissingRecipe_ReturnsZero()
+    {
+        Assert.Equal(0, _manager.AddIngredientsToShoppingList(999));
+        Assert.Empty(_manager.GetShoppingList());
+    }
+
+    [Fact]
+    public void ClearShoppingList_EmptiesList()
+    {
+        _manager.AddIngredientsToShoppingList(1);
+        _manager.ClearShoppingList();
+        Assert.Empty(_manager.GetShoppingList());
+        Assert.Equal(0, _manager.ShoppingItemCount);
+    }
+
+    [Fact]
+    public void GetShoppingList_DoesNotExposeInternalList()
+    {
+        _manager.AddIngredientsToShoppingList(2);
+        var returned = _manager.GetShoppingList();
+        if (returned is List<string> mutable)
+        {
+            mutable.Add("hacked");
+        }
+        // Mutating the returned copy must not change the manager's own list.
+        Assert.Single(_manager.GetShoppingList());
+    }
 
 }
