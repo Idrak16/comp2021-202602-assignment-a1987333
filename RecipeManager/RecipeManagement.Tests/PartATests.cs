@@ -202,5 +202,41 @@ public sealed class PartATests
         Assert.False(_manager.AddRecipeToCookingPlan(1));
         Assert.Equal(new[] { 1 }, _manager.GetCookingPlan());
     }
+    // ---------- Removed history (Stack) ----------
+
+    [Fact]
+    public void RemoveFromPlan_PushesToStack_LifoRestore()
+    {
+        _manager.AddRecipeToCookingPlan(1);
+        _manager.AddRecipeToCookingPlan(2);
+        _manager.RemoveRecipeFromCookingPlan(1);
+        _manager.RemoveRecipeFromCookingPlan(2);
+
+        Assert.Equal(2, _manager.PeekLastRemovedRecipe());
+        Assert.True(_manager.RestoreLastRemovedRecipe());
+        Assert.Equal(new[] { 2 }, _manager.GetCookingPlan());
+
+        Assert.True(_manager.RestoreLastRemovedRecipe());
+        Assert.Equal(new[] { 2, 1 }, _manager.GetCookingPlan());
+    }
+
+    [Fact]
+    public void RemoveFromPlan_NotPlanned_ReturnsFalse_StackUnchanged()
+    {
+        Assert.False(_manager.RemoveRecipeFromCookingPlan(1));
+        Assert.Equal(0, _manager.RemovedRecipeCount);
+    }
+
+    [Fact]
+    public void PeekLastRemoved_EmptyStack_ReturnsNull()
+    {
+        Assert.Null(_manager.PeekLastRemovedRecipe());
+    }
+
+    [Fact]
+    public void RestoreLastRemoved_EmptyStack_ReturnsFalse()
+    {
+        Assert.False(_manager.RestoreLastRemovedRecipe());
+    }
 
 }
