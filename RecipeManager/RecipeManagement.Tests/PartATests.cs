@@ -179,4 +179,28 @@ public sealed class PartATests
         Assert.Single(_manager.GetShoppingList());
     }
 
+    // ---------- Cooking plan (LinkedList) ----------
+
+    [Fact]
+    public void AddToCookingPlan_AppendsInOrder()
+    {
+        Assert.True(_manager.AddRecipeToCookingPlan(1));
+        Assert.True(_manager.AddRecipeToCookingPlan(2));
+        Assert.Equal(new[] { 1, 2 }, _manager.GetCookingPlan());
+    }
+
+    [Fact]
+    public void AddToCookingPlan_MissingRecipe_ReturnsFalse()
+    {
+        Assert.False(_manager.AddRecipeToCookingPlan(999));
+    }
+
+    [Fact]
+    public void AddToCookingPlan_Duplicate_ReturnsFalse()
+    {
+        _manager.AddRecipeToCookingPlan(1);
+        Assert.False(_manager.AddRecipeToCookingPlan(1));
+        Assert.Equal(new[] { 1 }, _manager.GetCookingPlan());
+    }
+
 }
