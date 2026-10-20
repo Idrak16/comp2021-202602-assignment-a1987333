@@ -181,11 +181,34 @@ public sealed class RecipeManager : IRecipeManager
     public string? CompleteNextInstruction() =>
         _instructionQueue.Count ==0? null: _instructionQueue.Dequeue();
 
-    public IReadOnlyList<Recipe> SearchByTitle(string searchText) =>
-        throw new NotImplementedException("Part B: implement SearchByTitle.");
+    public IReadOnlyList<Recipe> SearchByTitle(string searchText)
+    {
+        // A blank search returns every recipe.
+        if (string.IsNullOrWhiteSpace(searchText))
+        {
+            return _recipes.Values.ToList();
+        }
 
-    public IReadOnlyList<Recipe> SearchByIngredient(string searchText) =>
-        throw new NotImplementedException("Part B: implement SearchByIngredient.");
+        return _recipes.Values
+            .Where(recipe => recipe.Title.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+    }
+       
+
+    public IReadOnlyList<Recipe> SearchByIngredient(string searchText)
+    {
+        // A blank search returns every recipe.
+        if (string.IsNullOrWhiteSpace(searchText))
+        {
+            return _recipes.Values.ToList();
+        }
+        
+        return _recipes.Values
+            .Where(recipe => recipe.Ingredients
+                .Any(ingredient => ingredient.Contains(searchText, StringComparison.OrdinalIgnoreCase)))
+            .ToList();
+    }
+
 
     public IReadOnlyList<Recipe> GetHighestProteinRecipes(int count) =>
         throw new NotImplementedException("Part B: implement GetHighestProteinRecipes.");
@@ -209,5 +232,5 @@ public sealed class RecipeManager : IRecipeManager
         
 
      public IReadOnlyList<int> GetSavedRecipes() => _savedRecipes.ToList();
-     
+
 }
