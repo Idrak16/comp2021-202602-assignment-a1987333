@@ -183,7 +183,22 @@ public sealed class PartBTests
         Assert.Contains(2, saved);
     }
 
+    // ---------- Part B workflow ----------
 
+    [Fact]
+    public void Interaction_SearchThenSaveThenRemove()
+    {
+        var found = _manager.SearchByIngredient("beef");
+        Assert.Single(found);
+        int id = found[0].Id;
+
+        Assert.True(_manager.AddSavedRecipe(id));
+        Assert.True(_manager.IsRecipeSaved(id));
+        Assert.Contains(id, _manager.GetSavedRecipes());
+
+        Assert.True(_manager.RemoveSavedRecipe(id));
+        Assert.False(_manager.IsRecipeSaved(id));
+    }
     
 }
 
