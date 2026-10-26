@@ -1,12 +1,11 @@
 # Design
 
-Complete this document for **Part B**.
 
 ## 1. Saved recipe collection
 
-Name the C# collection you selected for the saved/favourite feature and explain why it suits add, remove, duplicate prevention and membership checks.
+Question: Name the C# collection you selected for the saved/favourite feature and explain why it suits add, remove, duplicate prevention and membership checks.
 
-For the saved/favourite feature I chose a `HashSet<int>` that stores the IDs of saved recipes. A HashSet suits all four operations this feature needs. Adding and removing are both average O(1) because the set is hash-based rather than something that has to be searched through. Duplicate prevention comes for free since a HashSet only ever holds distinct values, and `Add` returns `false` if the ID is already saved, so a recipe cannot be saved twice without me writing any extra checking code. Membership checks are the same story — `IsRecipeSaved` simply calls `HashSet.Contains`, which is an average O(1) hash lookup instead of scanning every saved ID like a `List` would. I store only the recipe ID rather than the whole `Recipe` object, since the Part A `Dictionary` catalogue is already the single source of truth for recipe data, and because the order of saved IDs is not assessed, the fact that a HashSet does not guarantee order does not matter here.
+Answer: For the saved/favourite feature I chose a `HashSet<int>` that stores the IDs of saved recipes. A HashSet suits all four operations this feature needs. Adding and removing are both average O(1) because the set is hash-based rather than something that has to be searched through. Duplicate prevention comes for free since a HashSet only ever holds distinct values, and `Add` returns `false` if the ID is already saved, so a recipe cannot be saved twice without me writing any extra checking code. Membership checks are the same story — `IsRecipeSaved` simply calls `HashSet.Contains`, which is an average O(1) hash lookup instead of scanning every saved ID like a `List` would. I store only the recipe ID rather than the whole `Recipe` object, since the Part A `Dictionary` catalogue is already the single source of truth for recipe data, and because the order of saved IDs is not assessed, the fact that a HashSet does not guarantee order does not matter here.
 
 ## 2. Integration
 
@@ -21,4 +20,5 @@ All of the Part B features work off the Part A `RecipeManager` and the recipe ca
 | Traverse cooking plan | LinkedList | O(n) | Each planned recipe may need to be visited. |
 | Complete next instruction | Queue | O(1) | The item at the front is removed. |
 | LINQ title/ingredient search | Recipe collection | O(n) | Each recipe may need to be inspected. |
-| Check whether a recipe is saved | Your chosen collection | | Explain how your collection performs membership checks. |
+| Add or remove a saved recipe | HashSet | Average O(1) | Hash-based insert and remove. |
+| Check whether a recipe is saved | HashSet | Average O(1) | `Contains` is a hash lookup, so it doesn't scan the saved IDs. |
