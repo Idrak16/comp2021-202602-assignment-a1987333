@@ -1,31 +1,30 @@
-# Recipe Management System — Student Starter
+# Recipe Management System
 
-Starter repository for Parts A and B. Implement `RecipeManager` in Core; the Application menu and JSON loader are supplied.
-
-## What is supplied
+## Supplied code
 
 - `RecipeManagement.Core/Models/` — recipe model classes
 - `RecipeManagement.Core/RecipeLoader.cs` — reads `data/recipes.json`
 - `RecipeManagement.Core/IRecipeManager.cs` — public API
 - `RecipeManagement.Application/` — console menu (options labelled PartA / PartB)
-- `RecipeManagement.Tests/` — example tests
 - `data/recipes.json` — recipe dataset
 
-## What you implement
+## Implemented
 
-**Part A** — `RecipeManager.cs` using:
+**Part A** — `RecipeManager.cs` using the five nominated collections:
 
-- `Dictionary<int, Recipe>`
-- `List<string>`
-- `LinkedList<int>`
-- `Stack<int>`
-- `Queue<string>`
+- `Dictionary<int, Recipe>` — recipe catalogue
+- `List<string>` — shopping list
+- `LinkedList<int>` — cooking plan
+- `Stack<int>` — removed-recipe history
+- `Queue<string>` — cooking instructions
 
-**Part B** — LINQ searches, protein report, saved-recipe collection, `Design.md`, and more tests.
+**Part B** — LINQ title and ingredient search, highest-protein report, and a saved-recipe
+feature backed by a `HashSet<int>`. See `Design.md` for the collection choice, integration
+and complexity notes.
 
-## Build and run
+## Build and test
 
-Open `StudentPackage/RecipeManagement.sln`:
+From this folder:
 
 ```bash
 dotnet build
@@ -33,8 +32,12 @@ dotnet test
 dotnet run --project RecipeManagement.Application -- data/recipes.json
 ```
 
-Until you implement `RecipeManager`, menu options print a **Not implemented** message.
+## Tests
+
+`RecipeManagement.Tests` contains the supplied example tests, `PartATests.cs` for the five
+Part A collections and their edge cases, and `PartBTests.cs` for the Part B search, report
+and saved-recipe features.
 
 ## AI acknowledgement
 
-Include the required AI acknowledgement statement in your submission as described in the assignment specification.
+[Your acknowledgement statement here — see the assignment specification for the required wording.]
