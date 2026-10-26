@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-
-
 namespace RecipeManagement.Core;
 
 /// <summary>
@@ -52,10 +50,6 @@ public sealed class RecipeManager : IRecipeManager
             }
         }
     }
-
-
-    
-
     public int RecipeCount => _recipes.Count;
     public int ShoppingItemCount => _shoppingList.Count;
     public int CookingPlanCount => _cookingPlan.Count;
@@ -63,7 +57,7 @@ public sealed class RecipeManager : IRecipeManager
     public int RemovedRecipeCount => _removedRecipes.Count;
 
     public bool AddRecipe(Recipe recipe) 
-        {
+    {
         if (recipe is null)
         {
             throw new ArgumentNullException(nameof(recipe));
@@ -97,23 +91,20 @@ public sealed class RecipeManager : IRecipeManager
         {
             return 0;
         }
-        foreach (string j in recipe.Ingredients)
+        foreach (string ingredient in recipe.Ingredients)
         {
-            _shoppingList.Add(j);
+            _shoppingList.Add(ingredient);
         }
         return recipe.Ingredients.Count;
- 
     }
 
     // Return a copy so callers cannot mutate the internal list.
     public IReadOnlyList<string> GetShoppingList() => _shoppingList.ToList();
-
     public void ClearShoppingList() => _shoppingList.Clear();
-
 
     public bool AddRecipeToCookingPlan(int recipeId)
     {
-        //Only a nown recipe must appear, that too only once
+        //Only a known recipe must appear, that too only once
         if (!_recipes.ContainsKey(recipeId) || _cookingPlan.Contains(recipeId))
         {
             return false;
@@ -124,18 +115,14 @@ public sealed class RecipeManager : IRecipeManager
 
     public bool RemoveRecipeFromCookingPlan(int recipeId)
     {
-
-
         if (!_cookingPlan.Remove(recipeId))
         {
             return false;
         }
-
         _removedRecipes.Push(recipeId);
         return true;
     }
-
-     public bool RestoreLastRemovedRecipe()
+    public bool RestoreLastRemovedRecipe()
     {
         if (_removedRecipes.Count == 0)
         {
@@ -158,28 +145,26 @@ public sealed class RecipeManager : IRecipeManager
 
     public IReadOnlyList<int> GetCookingPlan() => _cookingPlan.ToList();
         
-
-        public bool StartCooking(int recipeId)
+    public bool StartCooking(int recipeId)
     {
         if (!_recipes.TryGetValue(recipeId, out Recipe? recipe) || recipe.Instructions.Count == 0)
         {
             return false;
         }
-
+        
         _instructionQueue.Clear();
         foreach (string instruction in recipe.Instructions)
         {
             _instructionQueue.Enqueue(instruction);
         }
-
         return true;
     }
 
     public string? PeekNextInstruction() =>
-        _instructionQueue.Count ==0? null : _instructionQueue.Peek();
+        _instructionQueue.Count == 0 ? null : _instructionQueue.Peek();
 
     public string? CompleteNextInstruction() =>
-        _instructionQueue.Count ==0? null: _instructionQueue.Dequeue();
+        _instructionQueue.Count == 0 ? null: _instructionQueue.Dequeue();
 
     public IReadOnlyList<Recipe> SearchByTitle(string searchText)
     {
@@ -244,6 +229,6 @@ public sealed class RecipeManager : IRecipeManager
     public bool IsRecipeSaved(int recipeId) => _savedRecipes.Contains(recipeId);
         
 
-     public IReadOnlyList<int> GetSavedRecipes() => _savedRecipes.ToList();
+    public IReadOnlyList<int> GetSavedRecipes() => _savedRecipes.ToList();
 
 }
